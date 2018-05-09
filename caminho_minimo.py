@@ -28,18 +28,12 @@ m [0:5,0:5] = 999
 for i in range(0,5):
 	m[i][i] = 0
 
-listaArestas = []
-listaDist = []
-i=0
-
 for edge in g.es:
 	m[edge.tuple[0]][edge.tuple[1]]=edge['peso']
 
 print(runGraph(g))
 
-
 nFonte = g.__isub__(g.vs[2])
-
 
 print(runGraph(nFonte))
 
