@@ -1,6 +1,19 @@
 from igraph import *
 import numpy as np
 
+def runGraph(graph):
+	listOfEdges = []
+	subList = []
+
+	for vertex in graph.vs:
+		for edge in graph.incident(vertex):
+			origem = graph.es[edge].tuple[0]
+			alvo = graph.es[edge].tuple[1]
+			subList = [graph.vs[origem]['nome'],graph.es[edge]['peso'],graph.vs[alvo]['nome']]
+			listOfEdges.append(subList)
+	return listOfEdges
+
+
 g = Graph(directed=True)
 
 g.add_vertices(5)
@@ -22,15 +35,17 @@ i=0
 for edge in g.es:
 	m[edge.tuple[0]][edge.tuple[1]]=edge['peso']
 
-for vertex in g.vs:
-	for edge in g.incident(vertex):
-		origem = g.es[edge].tuple[0]
-		alvo = g.es[edge].tuple[1]
-		print(g.vs[origem]['nome'],g.es[edge]['peso'],g.vs[alvo]['nome'])
+print(runGraph(g))
+
+
+nFonte = g.__isub__(g.vs[2])
+
+
+print(runGraph(nFonte))
 
 
 #print(listaArestas)
 print("\n----------------------grafo-------------------\n")
-print(g)
+print(nFonte)
 print("\n------------matriz de adjacencia--------------\n")
 print(m)
