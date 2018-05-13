@@ -1,45 +1,32 @@
 from igraph import *
 import numpy as np
 
-def runGraph(graph):
+def runGraph(graph,vertex):
 	listOfEdges = []
 	subList = []
-
-	for vertex in graph.vs:
-		for edge in graph.incident(vertex):
-			origem = graph.es[edge].tuple[0]
-			alvo = graph.es[edge].tuple[1]
-			subList = [graph.vs[origem]['nome'],graph.es[edge]['peso'],graph.vs[alvo]['nome']]
-			listOfEdges.append(subList)
+	for edge in graph.incident(vertex):
+		origem = graph.es[edge].tuple[0]
+		alvo = graph.es[edge].tuple[1]
+		subList = [origem,graph.es[edge]['peso'],alvo]
+		listOfEdges.append(subList)
 	return listOfEdges
 
+myGraph = Graph(directed=True)
 
-g = Graph(directed=True)
+myGraph.add_vertices(5)
+myGraph.vs['nome'] = ['a','b','c','d','e']
+myGraph.add_edges([(0,1), (0,4), (1,2), (1,3), (1,4), (2,4)])
+myGraph.es['peso'] = [3,11,3,2,7,2]
 
-g.add_vertices(5)
-g.vs['nome'] = ['a','b','c','d','e']
-g.add_edges([(0,1), (0,4), (1,2), (1,3), (1,4), (2,4)])
+costList = 5 * [999]
+costList[0] = 0
 
-g.es['peso'] = [3,11,3,2,7,2]
+for arrow in runGraph(myGraph,myGraph.vs[0]):
+	costList[arrow[2]]=arrow[1]
 
-m = np.zeros((5,5),dtype=np.int)
-m [0:5,0:5] = 999
-
-for i in range(0,5):
-	m[i][i] = 0
-
-for edge in g.es:
-	m[edge.tuple[0]][edge.tuple[1]]=edge['peso']
-
-print(runGraph(g))
-
-nFonte = g.__isub__(g.vs[2])
-
-print(runGraph(nFonte))
-
-
-#print(listaArestas)
-print("\n----------------------grafo-------------------\n")
-print(nFonte)
-print("\n------------matriz de adjacencia--------------\n")
-print(m)
+for vertex in myGraph.vs:
+	print (vertex['nome'])
+	for actualArrow in runGraph(myGraph,vertex):
+		if(costList[actualArrow[0]]+actualArrow[1]<costList[actualArrow[2]]):
+			costList[actualArrow[2]]= costList[actualArrow[0]]+actualArrow[1]
+	print(costList)
