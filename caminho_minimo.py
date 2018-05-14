@@ -1,15 +1,24 @@
 from igraph import *
 import numpy as np
 
+class Arrow:
+	def __init__(self):
+		self.origin = ''
+		self.target = ''
+		self.cost = ''
+
+	def aPrint(self):
+		print(self.origin,self.cost,self.target)
+
 def runGraph(graph,vertex):
-	listOfEdges = []
-	subList = []
+	listOfArrows = []
 	for edge in graph.incident(vertex):
-		origem = graph.es[edge].tuple[0]
-		alvo = graph.es[edge].tuple[1]
-		subList = [origem,graph.es[edge]['peso'],alvo]
-		listOfEdges.append(subList)
-	return listOfEdges
+		a = Arrow()
+		a.origin = graph.es[edge].tuple[0]
+		a.cost = graph.es[edge]['peso']
+		a.target = graph.es[edge].tuple[1]
+		listOfArrows.append(a)
+	return listOfArrows
 
 myGraph = Graph(directed=True)
 
@@ -21,12 +30,9 @@ myGraph.es['peso'] = [3,11,3,2,7,2]
 costList = 5 * [999]
 costList[0] = 0
 
-for arrow in runGraph(myGraph,myGraph.vs[0]):
-	costList[arrow[2]]=arrow[1]
-
 for vertex in myGraph.vs:
-	print (vertex['nome'])
 	for actualArrow in runGraph(myGraph,vertex):
-		if(costList[actualArrow[0]]+actualArrow[1]<costList[actualArrow[2]]):
-			costList[actualArrow[2]]= costList[actualArrow[0]]+actualArrow[1]
-	print(costList)
+		if(costList[actualArrow.origin] + actualArrow.cost < costList[actualArrow.target]):
+			costList[actualArrow.target] = costList[actualArrow.origin] + actualArrow.cost
+
+print(costList)
